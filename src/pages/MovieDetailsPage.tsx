@@ -3,7 +3,6 @@ import {
 	AvatarGroup,
 	Badge,
 	Box,
-	Button,
 	Image,
 	SimpleGrid,
 	Text,
@@ -36,7 +35,7 @@ const MovieDetailsPage: FC = () => {
 		if (isLoading) {
 			setShow(0)
 		}
-		if (show != 0) {
+		if (show !== 0) {
 			if (castDetails.length / 6 > show + 1) {
 				setShowMore((more) => {
 					return {
@@ -78,7 +77,7 @@ const MovieDetailsPage: FC = () => {
 				})
 			}
 		}
-	}, [show, showMore, setShowMore, setShow, isLoading])
+	}, [show, showMore, setShowMore, setShow, isLoading, castDetails])
 
 	if (isLoading)
 		return (

@@ -87,7 +87,7 @@ const Homepage: FC = () => {
 							)
 						}}
 						onFocus={(event) => {
-							if (event.currentTarget.value != "") {
+							if (event.currentTarget.value !== "") {
 								setHideSearchResult(false)
 							}
 						}}
