@@ -15,7 +15,7 @@ const SimilarMovieCard: FC<{ movie: SimilarMovies }> = ({ movie }) => {
 				height={{
 					base: "175px",
 					sm: "240px",
-					md: "240px",
+					md: "230px",
 					lg: "240px",
 					xl: "175px",
 				}}

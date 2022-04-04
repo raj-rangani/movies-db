@@ -23,7 +23,7 @@ const MovieDetailsPage: FC = () => {
 	const { similarMovieDetails } = useSimilarMovies(Number(id))
 	const { castDetails } = useFetchCasts(Number(id))
 	const [showMore, setShowMore] = useState<castCardSize>({
-		base: 520,
+		base: 500,
 		sm: 600,
 		md: 620,
 		lg: 600,
@@ -72,7 +72,7 @@ const MovieDetailsPage: FC = () => {
 				setShowMore((more) => {
 					return {
 						...more,
-						base: 520 + show * 215,
+						base: 520 + show * 200,
 					}
 				})
 			}
