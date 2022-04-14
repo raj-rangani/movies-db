@@ -15,7 +15,7 @@ function useSimilarMovies(movieId: number) {
 					return data.results
 				})
 		},
-		[movieId],
+		[],
 	)
 
 	const { isLoading, error, data } = useQuery(["movies", movieId], () =>

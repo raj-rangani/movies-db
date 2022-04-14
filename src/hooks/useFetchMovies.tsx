@@ -5,18 +5,15 @@ import { Movie } from "../types/Movie"
 function useFetchMovies(pageNumber: number) {
 	const [movies, setMovies] = useState<Movie[]>([])
 
-	const fetchMovies = useCallback(
-		async (page: number): Promise<Movie[]> => {
-			const apiKey = process.env.REACT_APP_API_KEY
-			const apiUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=en-US&sort_by=popularity.desc&page=${page}`
-			return await fetch(apiUrl)
-				.then((response) => response.json())
-				.then((data) => {
-					return data.results
-				})
-		},
-		[pageNumber],
-	)
+	const fetchMovies = useCallback(async (page: number): Promise<Movie[]> => {
+		const apiKey = process.env.REACT_APP_API_KEY
+		const apiUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=en-US&sort_by=popularity.desc&page=${page}`
+		return await fetch(apiUrl)
+			.then((response) => response.json())
+			.then((data) => {
+				return data.results
+			})
+	}, [])
 
 	const { isLoading, error, data } = useQuery(["movies", pageNumber], () =>
 		fetchMovies(pageNumber),
@@ -28,7 +25,7 @@ function useFetchMovies(pageNumber: number) {
 				return [...movie, ...data]
 			})
 		}
-	}, [isLoading, pageNumber])
+	}, [isLoading, pageNumber, data])
 
 	return { isLoading, error, movies }
 }

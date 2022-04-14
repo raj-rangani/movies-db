@@ -15,7 +15,7 @@ function useSearchMovies(searchText: string) {
 					return data.results
 				})
 		},
-		[searchText],
+		[],
 	)
 
 	const { isLoading, error, data } = useQuery(["movies", searchText], () =>
@@ -51,7 +51,7 @@ function useSearchMovies(searchText: string) {
 				]
 			})
 		}
-	}, [searchText, data])
+	}, [searchText, data, error])
 
 	return { searchMovies, isLoading, error }
 }

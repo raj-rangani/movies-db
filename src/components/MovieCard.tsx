@@ -1,6 +1,5 @@
 import { Box, Stack, Text, Badge } from "@chakra-ui/react"
 import { FC } from "react"
-import { useNavigate } from "react-router-dom"
 import { Movie } from "../types/Movie"
 
 const MovieCard: FC<{ movie: Movie }> = ({ movie }) => {

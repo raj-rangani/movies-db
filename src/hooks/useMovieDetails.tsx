@@ -15,7 +15,7 @@ function useMovieDetails(movieId: number) {
 					return data
 				})
 		},
-		[movieId],
+		[],
 	)
 
 	const { isLoading, error, data } = useQuery(["movieDetails", movieId], () =>

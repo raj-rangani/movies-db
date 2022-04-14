@@ -2,7 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom"
 import "./App.css"
 import HomePage from "./pages/HomePage"
 import MovieDetailsPage from "./pages/MovieDetailsPage"
-import { QueryClient, QueryClientProvider, useQuery } from "react-query"
+import { QueryClient, QueryClientProvider } from "react-query"
 
 const App = () => {
 	const queryClient = new QueryClient()
