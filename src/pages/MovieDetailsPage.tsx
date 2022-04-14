@@ -12,7 +12,7 @@ import { Link, useParams } from "react-router-dom"
 import CastCard from "../components/CastCard"
 import Loader from "../components/Loader"
 import SimilarMovieCard from "../components/SimilarMovieCard"
-import useFetchCasts from "../hooks/useFetchCasts"
+import useCastDetails from "../hooks/useCastDetails"
 import useMovieDetails from "../hooks/useMovieDetails"
 import useSimilarMovies from "../hooks/useSimilarMovies"
 
@@ -21,7 +21,7 @@ const MovieDetailsPage: FC = () => {
 	const { id } = useParams()
 	const { movieDetails, isLoading } = useMovieDetails(Number(id))
 	const { similarMovieDetails } = useSimilarMovies(Number(id))
-	const { castDetails } = useFetchCasts(Number(id))
+	const { castDetails } = useCastDetails(Number(id))
 	const [showMore, setShowMore] = useState<castCardSize>({
 		base: 500,
 		sm: 600,
@@ -30,6 +30,15 @@ const MovieDetailsPage: FC = () => {
 		xl: 640,
 	})
 	const [show, setShow] = useState<number>(0)
+	if (movieDetails?.release_date) {
+		const date = new Date(movieDetails?.release_date)
+		const formattedDate = date.toLocaleString("en-US", {
+			month: "long",
+			day: "numeric",
+			year: "numeric",
+		})
+		movieDetails.release_date = formattedDate
+	}
 
 	useEffect(() => {
 		if (isLoading) {

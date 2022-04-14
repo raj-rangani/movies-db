@@ -1,22 +1,34 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
+import { useQuery } from "react-query"
 import { SimilarMovies } from "../types/SimilarMovies"
 
 function useSimilarMovies(movieId: number) {
 	const [similarMovieDetails, setSimilarMovieDetails] = useState<SimilarMovies[]>([])
 
-	useEffect(() => {
-		fetch(
-			`https://api.themoviedb.org/3/movie/${movieId}/similar?api_key=55903b004b65252bf433fb4218601d2c`,
-		)
-			.then((response) => response.json())
-			.then((data) => {
-				setSimilarMovieDetails(() => {
-					return [...data.results]
+	const fetchSimilarMovies = useCallback(
+		async (movieId: number): Promise<SimilarMovies[]> => {
+			const apiKey = process.env.REACT_APP_API_KEY
+			const apiUrl = `https://api.themoviedb.org/3/movie/${movieId}/similar?api_key=${apiKey}`
+			return await fetch(apiUrl)
+				.then((response) => response.json())
+				.then((data) => {
+					return data.results
 				})
-			})
-	}, [movieId])
+		},
+		[movieId],
+	)
 
-	return { similarMovieDetails }
+	const { isLoading, error, data } = useQuery(["movies", movieId], () =>
+		fetchSimilarMovies(movieId),
+	)
+
+	useEffect(() => {
+		if (data) {
+			setSimilarMovieDetails(data)
+		}
+	}, [movieId, data])
+
+	return { similarMovieDetails, isLoading, error }
 }
 
 export default useSimilarMovies

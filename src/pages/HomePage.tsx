@@ -9,6 +9,7 @@ import {
 	SimpleGrid,
 	Text,
 	useOutsideClick,
+	useColorModeValue,
 } from "@chakra-ui/react"
 import { FC, useRef, useState } from "react"
 import InfiniteScroll from "react-infinite-scroll-component"
@@ -23,10 +24,17 @@ const Homepage: FC = () => {
 	const [page, setPage] = useState<number>(1)
 	const [searchText, setSearchText] = useState<string>("a")
 	const [hideSearchResult, setHideSearchResult] = useState<boolean>(true)
+	const [searchIndex, setSearchIndex] = useState<number>(0)
+
+	const searchContainer = useRef<any>()
 	const { colorMode, toggleColorMode } = useColorMode()
+
 	const { searchMovies } = useSearchMovies(searchText)
 	const { movies } = useFetchMovies(page)
-	const searchContainer = useRef<any>()
+	console.log(movies)
+
+	const searchCss = { background: useColorModeValue("#d5d5d5", "#2e3c57") }
+
 	useOutsideClick({
 		ref: searchContainer,
 		handler: () => setHideSearchResult(true),
@@ -45,7 +53,6 @@ const Homepage: FC = () => {
 		}
 	}
 
-	console.log(searchMovies)
 	return (
 		<>
 			<Box
@@ -80,15 +87,36 @@ const Homepage: FC = () => {
 						paddingBottom={{ base: "0", lg: "1" }}
 						focusBorderColor={colorMode === "dark" ? "#EEEEEE" : "#111111"}
 						onChange={(e) => {
-							handleSearchText(
+							const searcText =
 								e.currentTarget.value === " "
 									? "+"
-									: e.currentTarget.value,
-							)
+									: e.currentTarget.value
+							handleSearchText(searcText)
 						}}
 						onFocus={(event) => {
 							if (event.currentTarget.value !== "") {
 								setHideSearchResult(false)
+							}
+						}}
+						onKeyDown={(event) => {
+							console.log(event.key)
+							switch (event.key) {
+								case "ArrowUp":
+									if (event.currentTarget.value !== "") {
+										setSearchIndex((searchIndex) => {
+											return searchIndex - 1
+										})
+									}
+									break
+								case "ArrowDown":
+									if (event.currentTarget.value !== "") {
+										setSearchIndex((searchIndex) => {
+											return searchIndex + 1
+										})
+										console.log(searchContainer.current)
+									}
+									break
+								case "Enter":
 							}
 						}}
 					/>
@@ -135,15 +163,21 @@ const Homepage: FC = () => {
 					background={colorMode === "dark" ? "#222d42" : "#e5e5e5"}
 					position={"absolute"}
 				>
-					{searchMovies.map((movie, index) => (
-						<Link
-							key={movie.id}
-							to={`/movie/${movie.id}`}
-							style={{ textDecoration: "none" }}
-						>
-							<SearchRow key={index} movie={movie} />
-						</Link>
-					))}
+					{searchMovies.map((movie, index) => {
+						return (
+							<Link
+								key={movie.id}
+								to={`/movie/${movie.id}`}
+								style={{ textDecoration: "none" }}
+							>
+								<SearchRow
+									key={index}
+									movie={movie}
+									css={index === searchIndex ? searchCss : {}}
+								/>
+							</Link>
+						)
+					})}
 				</Box>
 			</Box>
 			<Box padding={{ base: "1.5rem", lg: "2rem" }}>
@@ -170,15 +204,26 @@ const Homepage: FC = () => {
 						columns={{ base: 2, sm: 3, md: 4, lg: 5, xl: 6 }}
 						gridGap={"4"}
 					>
-						{movies?.map((movie) => (
-							<Link
-								key={movie.id}
-								to={`/movie/${movie.id}`}
-								style={{ textDecoration: "none" }}
-							>
-								<MovieCard key={movie.id} movie={movie} />
-							</Link>
-						))}
+						{movies?.map((movie) => {
+							if (movie?.release_date) {
+								const date = new Date(movie?.release_date)
+								const formattedDate = date.toLocaleString("en-US", {
+									month: "long",
+									day: "numeric",
+									year: "numeric",
+								})
+								movie.release_date = formattedDate
+							}
+							return (
+								<Link
+									key={movie.id}
+									to={`/movie/${movie.id}`}
+									style={{ textDecoration: "none" }}
+								>
+									<MovieCard key={movie.id} movie={movie} />
+								</Link>
+							)
+						})}
 					</SimpleGrid>
 				</InfiniteScroll>
 			</Box>

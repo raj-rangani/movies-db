@@ -28,7 +28,7 @@ const SimilarMovieCard: FC<{ movie: SimilarMovies }> = ({ movie }) => {
 						borderRadius={8}
 						overflow="hidden"
 						background={
-							"url('https://image.tmdb.org/t/p/w500/" +
+							"Linear-gradient(180deg, rgba(10, 10, 10, 0), rgba(0, 0, 0, 1) 95%), url('https://image.tmdb.org/t/p/w500/" +
 							movie.backdrop_path +
 							"')"
 						}

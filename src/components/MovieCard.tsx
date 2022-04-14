@@ -4,13 +4,9 @@ import { useNavigate } from "react-router-dom"
 import { Movie } from "../types/Movie"
 
 const MovieCard: FC<{ movie: Movie }> = ({ movie }) => {
-	let navigate = useNavigate()
 	return (
 		<>
 			<Box
-				onClick={() => {
-					navigate(`/movie/${movie.id}`, { replace: false, state: true })
-				}}
 				background={
 					"url('https://image.tmdb.org/t/p/w500/" + movie.poster_path + "')"
 				}

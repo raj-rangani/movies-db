@@ -1,22 +1,36 @@
-import { useState, useEffect } from "react"
+import { useState, useCallback, useEffect } from "react"
+import { useQuery } from "react-query"
 import { Movie } from "../types/Movie"
 
 function useFetchMovies(pageNumber: number) {
 	const [movies, setMovies] = useState<Movie[]>([])
 
-	useEffect(() => {
-		fetch(
-			`https://api.themoviedb.org/3/discover/movie?api_key=55903b004b65252bf433fb4218601d2c&language=en-US&sort_by=popularity.desc&page=${pageNumber}`,
-		)
-			.then((response) => response.json())
-			.then((data) => {
-				setMovies((movies) => {
-					return [...movies, ...data.results]
+	const fetchMovies = useCallback(
+		async (page: number): Promise<Movie[]> => {
+			const apiKey = process.env.REACT_APP_API_KEY
+			const apiUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=en-US&sort_by=popularity.desc&page=${page}`
+			return await fetch(apiUrl)
+				.then((response) => response.json())
+				.then((data) => {
+					return data.results
 				})
-			})
-	}, [pageNumber])
+		},
+		[pageNumber],
+	)
 
-	return { movies }
+	const { isLoading, error, data } = useQuery(["movies", pageNumber], () =>
+		fetchMovies(pageNumber),
+	)
+
+	useEffect(() => {
+		if (data) {
+			setMovies((movie) => {
+				return [...movie, ...data]
+			})
+		}
+	}, [isLoading, pageNumber])
+
+	return { isLoading, error, movies }
 }
 
 export default useFetchMovies
